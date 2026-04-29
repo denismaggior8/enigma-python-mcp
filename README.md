@@ -149,5 +149,5 @@ To run the tests:
 source .venv/bin/activate
 
 pip install pytest
-pytest tests/test_server.py
+export PYTHONPATH=$PYTHONPATH:$(pwd)/src/enigmapython_mcp && pytest tests/* 
 ```

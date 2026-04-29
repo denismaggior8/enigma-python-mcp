@@ -86,16 +86,19 @@ To use this with Claude Desktop locally, add the following to your `claude_deskt
 ```
 
 ## Client Configuration (OpenCode)
-To use this server with OpenCode, add the following to your `~/.config/opencode/opencode.jsonc` (global) or `opencode.json` (project-level) under the `mcp` section:
+To use this server with OpenCode, add the following to your `~/.config/opencode/opencode.json` (global) or `opencode.json` (project-level) under the `mcp` section:
 
 ### Using Python
 ```json
 {
   "mcp": {
     "enigma": {
-      "type": "stdio",
-      "command": "python",
-      "args": ["/absolute/path/to/enigma-python-mcp/server.py", "--transport", "stdio"],
+      "type": "local",
+      "command": [
+        "/absolute/path/to/enigma-python-mcp/server.py",
+        "--transport",
+        "stdio"
+      ],
       "enabled": true
     }
   }
@@ -109,14 +112,31 @@ To use this server with OpenCode, add the following to your `~/.config/opencode/
 {
   "mcp": {
     "enigma": {
-      "type": "stdio",
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "enigma-mcp-server"],
+      "type": "local",
+      "command": [
+        "docker",
+        "run",
+        "-i",
+        "--rm",
+        "enigma-mcp-server"
+      ],
       "enabled": true
     }
   }
 }
 ```
+
+## Example Prompts
+Once the server is configured, you can test it by sending the following prompts to your LLM:
+
+**Example 1: Basic Encryption (Enigma M3)**
+> "I need to encrypt the message 'TOPSECRET' using an Enigma M3. Please use rotors I, II, and III from left to right, all starting at position 0 with ring settings at 0. Use reflector 'UKWB' and no plugboard. What is the ciphertext?"
+
+**Example 2: Historical Decryption (Enigma I)**
+> "Decrypt this 1930 Enigma I message. The ciphertext is 'GCDSEAHUGWTQGRK'. The settings are: Rotors II, I, and III (Left to Right). Ring settings are 23, 12, and 21. Initial positions are 0, 1, and 11. The reflector is 'UKWA'. The plugboard swaps are: A/M, F/I, N/V, P/S, T/U, W/Z."
+
+**Example 3: Complex M4 Configuration**
+> "Use the Enigma M4 to encrypt the message 'DIVE DIVE DIVE'. The machine uses the 'UKWBThin' reflector. The rotors from left to right are: Gamma (pos 21), IV (pos 12), III (pos 6), and VIII (pos 2). All ring settings are 0. Please process this."
 
 ## Testing
 A comprehensive test suite is included in `tests/test_server.py`. It tests the encryption and decryption reversibility for all 10 supported Enigma models.

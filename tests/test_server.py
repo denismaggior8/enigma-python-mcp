@@ -1,0 +1,157 @@
+import sys
+import os
+import pytest
+
+# Add parent directory to path to import server
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from server import encrypt_message, RotorConfig, ReflectorConfig
+
+import sys
+import os
+import pytest
+
+# Add parent directory to path to import server
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from server import encrypt_message, RotorConfig, ReflectorConfig
+
+def test_enigma_i_1930():
+    """
+    Verifies the decryption of the authentic 1930 German Army Enigma test message.
+    Source: https://cryptocellar.org/enigma/e-message-1930.html
+    Left to Right: II, I, III
+    Rings (0-based): 23, 12, 21
+    Pos (0-based): 0, 1, 11
+    """
+    rotors = [
+        RotorConfig(rotor_type="II", ring_setting=23, initial_position=0),
+        RotorConfig(rotor_type="I", ring_setting=12, initial_position=1),
+        RotorConfig(rotor_type="III", ring_setting=21, initial_position=11)
+    ]
+    reflector = ReflectorConfig(reflector_type="UKWA")
+    plugboard = {"A": "M", "F": "I", "N": "V", "P": "S", "T": "U", "W": "Z"}
+    
+    ciphertext = "GCDSE AHUGW TQGRK VLFGX UCALX VYMIG MMNMF DXTGN VHVRM MEVOU YFZSL RHDRR XFJWC FHUHM UNZEF RDISI KBGPM YVXUZ".replace(" ", "").lower()
+    expected_plaintext = "FEIND LIQEI NFANT ERIEK OLONN EBEOB AQTET XANFA NGSUE DAUSG ANGBA ERWAL DEXEN DEDRE IKMOS TWAER TSNEU STADT".replace(" ", "").lower()
+    
+    plaintext = encrypt_message("I", ciphertext, rotors, reflector, plugboard)
+    assert plaintext == expected_plaintext
+
+def test_m4_u534():
+    """
+    Verifies the decryption of the U534 M4 message P1030700.
+    Source: https://enigma.hoerenberg.com/index.php?cat=The%20U534%20messages&page=P1030700
+    Left to Right: Gamma, IV, III, VIII
+    Rings (0-based): 0, 0, 2, 20
+    Pos (0-based): 21, 12, 6, 2
+    """
+    rotors = [
+        RotorConfig(rotor_type="Gamma", ring_setting=0, initial_position=21),
+        RotorConfig(rotor_type="IV", ring_setting=0, initial_position=12),
+        RotorConfig(rotor_type="III", ring_setting=2, initial_position=6),
+        RotorConfig(rotor_type="VIII", ring_setting=20, initial_position=2)
+    ]
+    reflector = ReflectorConfig(reflector_type="UKWBThin")
+    plugboard = {"C": "H", "E": "J", "N": "V", "O": "U", "T": "Y", "L": "G", "S": "Z", "P": "K", "D": "I", "Q": "B"}
+    
+    ciphertext = "QBHEWTDFEQITKUWFQUHLIQQGVYGRSDOHDCOBFMDHXSKOFPAODRSVBEREIQZVEDAXSHOHBIYMCIIZSKGNDLNFKFVLWWHZXZGQXWSSPWLSOQXEANCELJYJCETZTLSTTWMTOBW".lower()
+    expected_plaintext = "KOMXBDMXUUUBOOTEYFXDXUUUAUSBILVUNYYZWOSECHSXUUUFLOTTXVVVUUURWODREISECHSVIERKKREMASKKMITUUVZWODREIFUVFYEWHSYUUUZWODREIFUNFZWOYUUFZWL".lower()
+    
+    plaintext = encrypt_message("M4", ciphertext, rotors, reflector, plugboard)
+    assert plaintext == expected_plaintext
+
+def test_m3_real_payload():
+    """
+    Verifies M3 encryption against upstream EnigmaM3_tests.py.
+    Rotors L-R: VI, V, IV
+    Positions: 15, 4, 25
+    """
+    rotors = [
+        RotorConfig(rotor_type="VI", ring_setting=0, initial_position=15),
+        RotorConfig(rotor_type="V", ring_setting=0, initial_position=4),
+        RotorConfig(rotor_type="IV", ring_setting=0, initial_position=25)
+    ]
+    reflector = ReflectorConfig(reflector_type="UKWB")
+    
+    plaintext = "thisismyawesomeenigmasupercalifragilistichespiralidososupercalifragilistichespiralidoso"
+    expected_ciphertext = "grdftnwtlegogzglhwbjgttnnwaigcpamesxheqjtxiecywvdxcncyifitbpgokalupxaambtxblvkmjlgejgdv"
+    
+    ciphertext = encrypt_message("M3", plaintext, rotors, reflector)
+    assert ciphertext == expected_ciphertext
+
+def test_enigma_z_real_payload():
+    """
+    Verifies Enigma Z encryption against upstream EnigmaZ_tests.py.
+    """
+    rotors = [
+        RotorConfig(rotor_type="I", initial_position=0),
+        RotorConfig(rotor_type="I", initial_position=0),
+        RotorConfig(rotor_type="I", initial_position=0)
+    ]
+    reflector = ReflectorConfig(reflector_type="UKW_EnigmaZ")
+    
+    plaintext = "123456789012345678901234567890"
+    expected_ciphertext = "719365648926063110712103315478"
+    
+    ciphertext = encrypt_message("Z", plaintext, rotors, reflector)
+    assert ciphertext == expected_ciphertext
+
+def test_enigma_k_verified_vector():
+    """
+    Test against a vector verified with dencode.com and cryptii.com
+    Rotors L-R: III, II, I
+    """
+    rotors = [
+        RotorConfig(rotor_type="III", initial_position=0),
+        RotorConfig(rotor_type="II", initial_position=0),
+        RotorConfig(rotor_type="I", initial_position=0)
+    ]
+    reflector = ReflectorConfig(reflector_type="UKW_EnigmaCommercial")
+    
+    plaintext = "helloworld"
+    expected_ciphertext = "acsyipzuuu"
+    
+    ciphertext = encrypt_message("K", plaintext, rotors, reflector)
+    assert ciphertext == expected_ciphertext
+
+# Keep reversibility for models that might not have a long known plaintext in tests easily accessible
+def test_enigma_k_swiss_reversibility():
+    plaintext = "swissmodel"
+    rotors = [RotorConfig(rotor_type="I"), RotorConfig(rotor_type="II"), RotorConfig(rotor_type="III")]
+    reflector = ReflectorConfig(reflector_type="UKW_EnigmaCommercial")
+    cipher = encrypt_message("K_Swiss", plaintext, rotors, reflector)
+    decrypted = encrypt_message("K_Swiss", cipher, rotors, reflector)
+    assert decrypted == plaintext
+
+def test_enigma_d_reversibility():
+    plaintext = "anothercommercial"
+    rotors = [RotorConfig(rotor_type="I"), RotorConfig(rotor_type="II"), RotorConfig(rotor_type="III")]
+    reflector = ReflectorConfig(reflector_type="UKW_EnigmaCommercial")
+    cipher = encrypt_message("D", plaintext, rotors, reflector)
+    decrypted = encrypt_message("D", cipher, rotors, reflector)
+    assert decrypted == plaintext
+
+def test_enigma_b_a133_reversibility():
+    plaintext = "svenskamaskin"
+    rotors = [RotorConfig(rotor_type="I"), RotorConfig(rotor_type="II"), RotorConfig(rotor_type="III")]
+    reflector = ReflectorConfig(reflector_type="UKW_EnigmaB_A133")
+    cipher = encrypt_message("B_A133", plaintext, rotors, reflector)
+    decrypted = encrypt_message("B_A133", cipher, rotors, reflector)
+    assert decrypted == plaintext
+
+def test_enigma_i_norway_reversibility():
+    plaintext = "norenigma"
+    rotors = [RotorConfig(rotor_type="I"), RotorConfig(rotor_type="II"), RotorConfig(rotor_type="III")]
+    reflector = ReflectorConfig(reflector_type="UKW_EnigmaINorway")
+    cipher = encrypt_message("I_Norway", plaintext, rotors, reflector)
+    decrypted = encrypt_message("I_Norway", cipher, rotors, reflector)
+    assert decrypted == plaintext
+
+def test_enigma_i_sondermaschine_reversibility():
+    plaintext = "sondermaschine"
+    rotors = [RotorConfig(rotor_type="I"), RotorConfig(rotor_type="II"), RotorConfig(rotor_type="III")]
+    reflector = ReflectorConfig(reflector_type="UKW_EnigmaISonder")
+    cipher = encrypt_message("I_Sondermaschine", plaintext, rotors, reflector)
+    decrypted = encrypt_message("I_Sondermaschine", cipher, rotors, reflector)
+    assert decrypted == plaintext

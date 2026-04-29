@@ -1,0 +1,22 @@
+{
+  "manifest_version": "0.1",
+  "name": "enigma-mcp-server",
+  "version": "1.0.0",
+  "description": "Exposes historically accurate Enigma machine emulators",
+  "author": {
+    "name": "Denis Maggiorotto"
+  },
+  "server": {
+    "type": "binary",
+    "entry_point": "docker",
+    "mcp_config": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "enigma-mcp-server"
+      ]
+    }
+  }
+}

@@ -112,7 +112,7 @@ def encrypt_message(
             - 'Z': Rotors I-III. Reflectors: UKW_EnigmaZ
             - 'B_A133': Rotors I-III. Reflectors: UKW_EnigmaB_A133
         message: The plaintext or ciphertext to process.
-        rotors: List of RotorConfig objects. Ordered from left to right as mechanically placed.
+        rotors: List of RotorConfig objects. Ordered from Fastest (Right) to Slowest (Left). For M4, the Greek rotor is the last element.
         reflector: The ReflectorConfig object.
         plugboard_pairs: Optional dict for plugboard connections (e.g. {"A": "B", "C": "D"}). Ignored if the machine has no plugboard.
     """
@@ -188,14 +188,6 @@ def encrypt_message(
     # 5. Build Enigma Machine
     machine_cls = get_class(config["cls"])
     
-    # Different machines have different constructor signatures
-    # Typically: plugboard, rotorN..rotor1, reflector, etw
-    # Let's dynamically pass them based on expected parameters.
-    # EnigmaM3/M4 expect rotors passed individually, reversed usually?
-    # Wait, the M3 example: enigma = EnigmaM3(plugboard, rotor3, rotor2, rotor1, reflector, etw, True)
-    # The M4 example: enigma = EnigmaM4(plugboard, rotor1, rotor2, rotor3, rotor4, reflector, etw, True)
-    # Actually, enigmapython passes rotors from left to right mechanically. 
-    # Let's inspect the constructor of the class to see how many rotors it takes.
     import inspect
     sig = inspect.signature(machine_cls.__init__)
     params = list(sig.parameters.keys())[1:] # skip 'self'
@@ -213,14 +205,10 @@ def encrypt_message(
         elif p == "auto_increment_rotors":
             kwargs[p] = config["default_auto_increment"]
         elif p.startswith("rotor"):
-            # Enigmapython constructors define rotor1=Right(fast), rotor2=Middle, rotor3=Left, etc.
-            # The user provides rotors from Left to Right.
-            # So rotor1 is the last element in rotor_instances, rotor2 is second to last, etc.
             try:
-                # E.g., 'rotor1' -> idx = 1 -> rotor_instances[-1]
-                idx = int(p.replace("rotor", ""))
-                if 1 <= idx <= len(rotor_instances):
-                    kwargs[p] = rotor_instances[-idx]
+                idx = int(p.replace("rotor", "")) - 1
+                if 0 <= idx < len(rotor_instances):
+                    kwargs[p] = rotor_instances[idx]
                 else:
                     raise ValueError(f"Machine {machine_model} expects more rotors than provided.")
             except ValueError:

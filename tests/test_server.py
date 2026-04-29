@@ -21,13 +21,14 @@ def test_enigma_i_1930():
     Verifies the decryption of the authentic 1930 German Army Enigma test message.
     Source: https://cryptocellar.org/enigma/e-message-1930.html
     Left to Right: II, I, III
-    Rings (0-based): 23, 12, 21
-    Pos (0-based): 0, 1, 11
+    Fastest to Slowest: III, I, II
+    Rings (0-based): 21, 12, 23
+    Pos (0-based): 11, 1, 0
     """
     rotors = [
-        RotorConfig(rotor_type="II", ring_setting=23, initial_position=0),
+        RotorConfig(rotor_type="III", ring_setting=21, initial_position=11),
         RotorConfig(rotor_type="I", ring_setting=12, initial_position=1),
-        RotorConfig(rotor_type="III", ring_setting=21, initial_position=11)
+        RotorConfig(rotor_type="II", ring_setting=23, initial_position=0)
     ]
     reflector = ReflectorConfig(reflector_type="UKWA")
     plugboard = {"A": "M", "F": "I", "N": "V", "P": "S", "T": "U", "W": "Z"}
@@ -43,14 +44,15 @@ def test_m4_u534():
     Verifies the decryption of the U534 M4 message P1030700.
     Source: https://enigma.hoerenberg.com/index.php?cat=The%20U534%20messages&page=P1030700
     Left to Right: Gamma, IV, III, VIII
-    Rings (0-based): 0, 0, 2, 20
-    Pos (0-based): 21, 12, 6, 2
+    Fastest to Slowest: VIII, III, IV, Gamma
+    Rings (0-based): 20, 2, 0, 0
+    Pos (0-based): 2, 6, 12, 21
     """
     rotors = [
-        RotorConfig(rotor_type="Gamma", ring_setting=0, initial_position=21),
-        RotorConfig(rotor_type="IV", ring_setting=0, initial_position=12),
+        RotorConfig(rotor_type="VIII", ring_setting=20, initial_position=2),
         RotorConfig(rotor_type="III", ring_setting=2, initial_position=6),
-        RotorConfig(rotor_type="VIII", ring_setting=20, initial_position=2)
+        RotorConfig(rotor_type="IV", ring_setting=0, initial_position=12),
+        RotorConfig(rotor_type="Gamma", ring_setting=0, initial_position=21)
     ]
     reflector = ReflectorConfig(reflector_type="UKWBThin")
     plugboard = {"C": "H", "E": "J", "N": "V", "O": "U", "T": "Y", "L": "G", "S": "Z", "P": "K", "D": "I", "Q": "B"}
@@ -65,12 +67,13 @@ def test_m3_real_payload():
     """
     Verifies M3 encryption against upstream EnigmaM3_tests.py.
     Rotors L-R: VI, V, IV
-    Positions: 15, 4, 25
+    Fastest to Slowest: IV, V, VI
+    Positions: 25, 4, 15
     """
     rotors = [
-        RotorConfig(rotor_type="VI", ring_setting=0, initial_position=15),
+        RotorConfig(rotor_type="IV", ring_setting=0, initial_position=25),
         RotorConfig(rotor_type="V", ring_setting=0, initial_position=4),
-        RotorConfig(rotor_type="IV", ring_setting=0, initial_position=25)
+        RotorConfig(rotor_type="VI", ring_setting=0, initial_position=15)
     ]
     reflector = ReflectorConfig(reflector_type="UKWB")
     
@@ -101,11 +104,12 @@ def test_enigma_k_verified_vector():
     """
     Test against a vector verified with dencode.com and cryptii.com
     Rotors L-R: III, II, I
+    Fastest to Slowest: I, II, III
     """
     rotors = [
-        RotorConfig(rotor_type="III", initial_position=0),
+        RotorConfig(rotor_type="I", initial_position=0),
         RotorConfig(rotor_type="II", initial_position=0),
-        RotorConfig(rotor_type="I", initial_position=0)
+        RotorConfig(rotor_type="III", initial_position=0)
     ]
     reflector = ReflectorConfig(reflector_type="UKW_EnigmaCommercial")
     

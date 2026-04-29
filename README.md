@@ -72,6 +72,8 @@ To use this with Claude Desktop locally, add the following to your `claude_deskt
 ```
 
 ### Using Docker
+*(Note: Make sure you have built the Docker image first: `docker build -t enigma-mcp-server .`)*
+
 ```json
 {
   "mcpServers": {
@@ -101,6 +103,8 @@ To use this server with OpenCode, add the following to your `~/.config/opencode/
 ```
 
 ### Using Docker
+*(Note: Make sure you have built the Docker image first: `docker build -t enigma-mcp-server .`)*
+
 ```json
 {
   "mcp": {

@@ -58,7 +58,12 @@ Requires Python 3.11+.
    ```
 
 ## Client Configuration (Claude Desktop)
-To use this with Claude Desktop locally, add the following to your `claude_desktop_config.json`:
+We provide two distinct `mcpb` bundles for 1-click installation on Claude Desktop. Simply download your preferred bundle from the GitHub Releases page and drag-and-drop it into Claude Desktop's Extensions menu:
+
+1. **`enigmapython-mcp-docker.mcpb`**: Extremely lightweight, relies on your local Docker daemon to run the server in an isolated container. *(Recommended)*
+2. **`enigmapython-mcp-python.mcpb`**: Contains the full Python source. Claude Desktop will natively build a virtual environment and run the server without needing Docker.
+
+If you prefer manual configuration via `claude_desktop_config.json`, use the settings below:
 
 ### Using Python (uvx recommended)
 ```json

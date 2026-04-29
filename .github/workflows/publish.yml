@@ -30,12 +30,18 @@ jobs:
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         
-      - name: Bundle MCP Desktop Extension
+      - name: Bundle MCP Desktop Extension (Docker)
         run: |
-          zip enigmapython-mcp.mcpb manifest.json src/enigmapython_mcp/server.py src/enigmapython_mcp/__init__.py pyproject.toml Dockerfile README.md
+          cp manifest-docker.json manifest.json
+          zip enigmapython-mcp-docker.mcpb manifest.json
           
-      - name: Create GitHub Release and Upload Asset
+      - name: Bundle MCP Desktop Extension (Native Python)
+        run: |
+          cp manifest-python.json manifest.json
+          zip enigmapython-mcp-python.mcpb manifest.json src/enigmapython_mcp/server.py src/enigmapython_mcp/__init__.py pyproject.toml README.md
+          
+      - name: Create GitHub Release and Upload Assets
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
-          files: enigmapython-mcp.mcpb
+          files: "*.mcpb"

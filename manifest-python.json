@@ -1,0 +1,21 @@
+{
+  "manifest_version": "0.1",
+  "name": "enigmapython-mcp-python",
+  "version": "0.1.0",
+  "description": "Exposes historically accurate Enigma machine emulators (Native Python)",
+  "author": {
+    "name": "Denis Maggiorotto"
+  },
+  "server": {
+    "type": "python",
+    "entry_point": "src/enigmapython_mcp/server.py",
+    "mcp_config": {
+      "command": "python",
+      "args": [
+        "${__dirname}/src/enigmapython_mcp/server.py",
+        "--transport",
+        "stdio"
+      ]
+    }
+  }
+}

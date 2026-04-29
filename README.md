@@ -16,7 +16,7 @@ Encrypt or decrypt a message using a configured Enigma machine.
 **Arguments:**
 - `machine_model` (str): Model name. Supported: `'M3'`, `'M4'`, `'I'`, `'I_Norway'`, `'I_Sondermaschine'`, `'K'`, `'K_Swiss'`, `'D'`, `'Z'`, `'B_A133'`.
 - `message` (str): The plaintext or ciphertext to process.
-- `rotors` (list[object]): List of `RotorConfig` objects. Each object specifies `rotor_type` (str), `ring_setting` (int, default=0), and `initial_position` (int | str, default=0). IMPORTANT: The list MUST be ordered from Fastest (Right) to Slowest (Left). For M4, the Greek rotor is the last element.
+- `rotors` (list[object]): List of `RotorConfig` objects. Each object specifies `rotor_type` (str), `ring_setting` (int, default=0), and `initial_position` (int | str, default=0). IMPORTANT: The list MUST be ordered exactly as: `[Fastest/Rightmost, Middle, Slowest/Leftmost, Greek (if M4)]`.
 - `reflector` (object): A `ReflectorConfig` object specifying `reflector_type` (str), and optionally `ring_setting` (int) and `initial_position` (int | str) for rotating reflectors.
 - `plugboard_pairs` (dict, optional): Dictionary mapping plugboard connections (e.g., `{"A": "B", "C": "D"}`).
 

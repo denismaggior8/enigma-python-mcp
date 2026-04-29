@@ -112,7 +112,7 @@ def encrypt_message(
             - 'Z': Rotors I-III. Reflectors: UKW_EnigmaZ
             - 'B_A133': Rotors I-III. Reflectors: UKW_EnigmaB_A133
         message: The plaintext or ciphertext to process.
-        rotors: List of RotorConfig objects. Ordered from Fastest (Right) to Slowest (Left). For M4, the Greek rotor is the last element.
+        rotors: List of RotorConfig objects. MUST be ordered exactly as: [Fastest/Rightmost, Middle, Slowest/Leftmost, Greek (if M4)].
         reflector: The ReflectorConfig object.
         plugboard_pairs: Optional dict for plugboard connections (e.g. {"A": "B", "C": "D"}). Ignored if the machine has no plugboard.
     """

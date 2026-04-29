@@ -21,8 +21,14 @@ jobs:
         with:
           python-version: "3.11"
           
-      - name: Install build tools
-        run: python -m pip install --upgrade pip build hatchling
+      - name: Install build tools and test dependencies
+        run: python -m pip install --upgrade pip build hatchling pytest
+        
+      - name: Install package
+        run: pip install .
+        
+      - name: Run unit tests
+        run: pytest tests/
         
       - name: Build package
         run: python -m build

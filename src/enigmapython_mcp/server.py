@@ -221,7 +221,7 @@ def encrypt_message(
     # enigmapython typically uses input_string
     return machine.input_string(message)
 
-if __name__ == "__main__":
+def main():
     import argparse
     parser = argparse.ArgumentParser(description="Enigma MCP Server")
     parser.add_argument("--transport", choices=["stdio", "sse"], default="stdio", help="Transport protocol (stdio or sse)")
@@ -233,3 +233,6 @@ if __name__ == "__main__":
         mcp.run(transport="sse", host=args.host, port=args.port)
     else:
         mcp.run()
+
+if __name__ == "__main__":
+    main()

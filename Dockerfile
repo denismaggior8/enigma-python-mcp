@@ -2,14 +2,14 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies and the package itself
+COPY . .
+RUN pip install --no-cache-dir .
 
-# Copy source code
-COPY server.py .
+# Run the server via the console script
+ENTRYPOINT ["enigmapython-mcp"]
 
 # By default run using stdio
 # To run over SSE (network), override the CMD:
-# CMD ["python", "server.py", "--transport", "sse"]
-CMD ["python", "server.py", "--transport", "stdio"]
+# CMD ["--transport", "sse"]
+CMD ["--transport", "stdio"]

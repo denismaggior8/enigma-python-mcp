@@ -25,61 +25,62 @@ Encrypt or decrypt a message using a configured Enigma machine.
 ### Using Python
 Requires Python 3.11+.
 
-1. Install dependencies:
+1. Install the package from PyPI:
    ```bash
-   pip install -r requirements.txt
+   pip install enigmapython-mcp
    ```
+   *(Alternatively, you can just run `uvx enigmapython-mcp` if you have `uv` installed!)*
 
 2. Run via stdio (for local MCP client):
    ```bash
-   python server.py --transport stdio
+   enigmapython-mcp --transport stdio
    ```
 
 3. Run via SSE (exposing over network):
    ```bash
-   python server.py --transport sse --host 0.0.0.0 --port 8000
+   enigmapython-mcp --transport sse --host 0.0.0.0 --port 8000
    ```
 
 ### Using Docker
 1. Build the container:
    ```bash
-   docker build -t enigma-mcp-server .
+   docker build -t enigmapython-mcp .
    ```
 
 2. Run via stdio (default):
    ```bash
-   docker run -i enigma-mcp-server
+   docker run -i enigmapython-mcp
    ```
 
 3. Run via SSE:
    ```bash
-   docker run -p 8000:8000 enigma-mcp-server python server.py --transport sse --host 0.0.0.0 --port 8000
+   docker run -p 8000:8000 enigmapython-mcp --transport sse --host 0.0.0.0 --port 8000
    ```
 
 ## Client Configuration (Claude Desktop)
 To use this with Claude Desktop locally, add the following to your `claude_desktop_config.json`:
 
-### Using Python
+### Using Python (uvx recommended)
 ```json
 {
   "mcpServers": {
     "enigma": {
-      "command": "python",
-      "args": ["/absolute/path/to/enigma-python-mcp/server.py", "--transport", "stdio"]
+      "command": "uvx",
+      "args": ["enigmapython-mcp", "--transport", "stdio"]
     }
   }
 }
 ```
 
 ### Using Docker
-*(Note: Make sure you have built the Docker image first: `docker build -t enigma-mcp-server .`)*
+*(Note: Make sure you have built the Docker image first: `docker build -t enigmapython-mcp .`)*
 
 ```json
 {
   "mcpServers": {
     "enigma": {
       "command": "docker",
-      "args": ["run", "-i", "--rm", "enigma-mcp-server"]
+      "args": ["run", "-i", "--rm", "enigmapython-mcp"]
     }
   }
 }
@@ -88,14 +89,15 @@ To use this with Claude Desktop locally, add the following to your `claude_deskt
 ## Client Configuration (OpenCode)
 To use this server with OpenCode, add the following to your `~/.config/opencode/opencode.json` (global) or `opencode.json` (project-level) under the `mcp` section:
 
-### Using Python
+### Using Python (uvx recommended)
 ```json
 {
   "mcp": {
     "enigma": {
       "type": "local",
       "command": [
-        "/absolute/path/to/enigma-python-mcp/server.py",
+        "uvx",
+        "enigmapython-mcp",
         "--transport",
         "stdio"
       ],
@@ -106,7 +108,7 @@ To use this server with OpenCode, add the following to your `~/.config/opencode/
 ```
 
 ### Using Docker
-*(Note: Make sure you have built the Docker image first: `docker build -t enigma-mcp-server .`)*
+*(Note: Make sure you have built the Docker image first: `docker build -t enigmapython-mcp .`)*
 
 ```json
 {
@@ -118,7 +120,7 @@ To use this server with OpenCode, add the following to your `~/.config/opencode/
         "run",
         "-i",
         "--rm",
-        "enigma-mcp-server"
+        "enigmapython-mcp"
       ],
       "enabled": true
     }

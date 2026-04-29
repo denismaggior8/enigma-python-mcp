@@ -2,19 +2,10 @@ import sys
 import os
 import pytest
 
-# Add parent directory to path to import server
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# Add src directory to path to import server
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-from server import encrypt_message, RotorConfig, ReflectorConfig
-
-import sys
-import os
-import pytest
-
-# Add parent directory to path to import server
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from server import encrypt_message, RotorConfig, ReflectorConfig
+from enigmapython_mcp.server import encrypt_message, RotorConfig, ReflectorConfig
 
 def test_enigma_i_1930():
     """

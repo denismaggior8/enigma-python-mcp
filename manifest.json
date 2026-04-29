@@ -1,6 +1,6 @@
 {
   "manifest_version": "0.1",
-  "name": "enigma-mcp-server",
+  "name": "enigmapython-mcp",
   "version": "1.0.0",
   "description": "Exposes historically accurate Enigma machine emulators",
   "author": {
@@ -15,7 +15,7 @@
         "run",
         "-i",
         "--rm",
-        "enigma-mcp-server"
+        "enigmapython-mcp"
       ]
     }
   }

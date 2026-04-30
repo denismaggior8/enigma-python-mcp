@@ -1,7 +1,7 @@
 {
   "manifest_version": "0.1",
   "name": "enigmapython-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Exposes historically accurate Enigma machine emulators",
   "author": {
     "name": "Denis Maggiorotto"

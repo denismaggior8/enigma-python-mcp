@@ -221,3 +221,23 @@ def test_exhaustive_sanitization_variants():
     ref_basic_1 = ReflectorConfig(reflector_type="A Reflector")
     ref_basic_2 = ReflectorConfig(reflector_type="ukw a")
     assert encrypt_message("I", plaintext, rotors_basic, ref_basic_1) == encrypt_message("I", plaintext, rotors_basic, ref_basic_2)
+
+def test_enigma_z_integer_message():
+    """
+    Verifies that the Enigma Z model (numerical) correctly processes integers passed 
+    directly without crashing Pydantic or the Enigma machine.
+    """
+    rotors = [RotorConfig(rotor_type="I"), RotorConfig(rotor_type="II"), RotorConfig(rotor_type="III")]
+    reflector = ReflectorConfig(reflector_type="UKW_EnigmaZ")
+    
+    # Pass an integer instead of a string
+    raw_message = 1234567890
+    
+    # Encrypt
+    ciphertext = encrypt_message("Z", raw_message, rotors, reflector)
+    
+    # Decrypt
+    decrypted = encrypt_message("Z", ciphertext, rotors, reflector)
+    
+    # Output should be the string version of the original integer
+    assert decrypted == str(raw_message)

@@ -102,7 +102,7 @@ class ReflectorConfig(BaseModel):
 @mcp.tool()
 def encrypt_message(
     machine_model: str,
-    message: str,
+    message: Union[str, int],
     rotors: List[RotorConfig],
     reflector: ReflectorConfig,
     plugboard_pairs: Dict[str, str] = None
@@ -112,7 +112,7 @@ def encrypt_message(
     
     Args:
         machine_model: Exact machine model name. MUST be one of: 'M3', 'M4', 'I', 'I_Norway', 'I_Sondermaschine', 'K', 'K_Swiss', 'D', 'Z', 'B_A133'. Do not add 'Enigma' prefix.
-        message: The plaintext or ciphertext to process.
+        message: The plaintext or ciphertext to process. Can be string or int.
         rotors: List of RotorConfig objects. MUST be ordered exactly as: [Fastest/Rightmost, Middle, Slowest/Leftmost, Greek (if M4)].
         reflector: The ReflectorConfig object.
         plugboard_pairs: Optional dict for plugboard connections (e.g. {"A": "B", "C": "D"}). Ignored if the machine has no plugboard.
@@ -246,7 +246,19 @@ def encrypt_message(
     
     # 6. Process message
     # enigmapython typically uses input_string
-    return machine.input_string(message)
+    message_str = str(message)
+    try:
+        return machine.input_string(message_str)
+    except ValueError as e:
+        error_msg = str(e)
+        if "not in list" in error_msg:
+            # Give the LLM a highly actionable error so it can self-correct
+            raise ValueError(
+                f"Invalid character error: {error_msg}. "
+                "Enigma machines DO NOT support spaces, punctuation, or literal quotes in the message. "
+                "Please strip all unsupported characters and pass only the raw letters/numbers."
+            )
+        raise
 
 def main():
     import argparse

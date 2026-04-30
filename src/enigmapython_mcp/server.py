@@ -116,10 +116,15 @@ def encrypt_message(
         reflector: The ReflectorConfig object.
         plugboard_pairs: Optional dict for plugboard connections (e.g. {"A": "B", "C": "D"}). Ignored if the machine has no plugboard.
     """
-    if machine_model not in MODELS_CONFIG:
+    # Map user input flexibly to known models (e.g. "i-norway" -> "I_Norway")
+    model_key_map = {k.lower().replace("_", "").replace("-", "").replace(" ", ""): k for k in MODELS_CONFIG.keys()}
+    mod_clean = machine_model.lower().replace("_", "").replace("-", "").replace(" ", "")
+    
+    if mod_clean not in model_key_map:
         raise ValueError(f"Unsupported machine model: {machine_model}")
         
-    config = MODELS_CONFIG[machine_model]
+    actual_model = model_key_map[mod_clean]
+    config = MODELS_CONFIG[actual_model]
     prefix = config["cls"] 
     
     # 1. Initialize ETW
@@ -127,7 +132,19 @@ def encrypt_message(
     etw = etw_cls()
     
     # 2. Initialize Reflector
-    reflector_cls_name = f"Reflector{reflector.reflector_type}"
+    # Sanitize common LLM formatting mistakes (e.g. "UKW-A" -> "UKWA")
+    ref_raw = reflector.reflector_type
+    ref_clean = ref_raw.upper().replace("-", "").replace(" ", "").replace("_", "")
+    
+    # Map cleaned variations to actual class names
+    if ref_clean == "UKWA": ref_type = "UKWA"
+    elif ref_clean == "UKWB": ref_type = "UKWB"
+    elif ref_clean == "UKWC": ref_type = "UKWC"
+    elif ref_clean == "UKWBTHIN": ref_type = "UKWBThin"
+    elif ref_clean == "UKWCTHIN": ref_type = "UKWCThin"
+    else: ref_type = ref_raw # Fallback to exactly what the user passed
+    
+    reflector_cls_name = f"Reflector{ref_type}"
     try:
         reflector_cls = get_class(reflector_cls_name)
     except ModuleNotFoundError:
@@ -158,7 +175,12 @@ def encrypt_message(
     # 3. Initialize Rotors
     rotor_instances = []
     for r_conf in rotors:
-        r_cls_name = f"{prefix}Rotor{r_conf.rotor_type}"
+        # Sanitize rotor type casing and common prefixes (e.g. "Rotor-I" -> "I", "beta" -> "Beta")
+        r_type = r_conf.rotor_type.upper().replace("ROTOR", "").replace("-", "").replace(" ", "").replace("_", "")
+        if r_type == "BETA": r_type = "Beta"
+        elif r_type == "GAMMA": r_type = "Gamma"
+        
+        r_cls_name = f"{prefix}Rotor{r_type}"
         try:
             r_cls = get_class(r_cls_name)
         except ModuleNotFoundError:

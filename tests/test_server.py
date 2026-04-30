@@ -150,3 +150,53 @@ def test_enigma_i_sondermaschine_reversibility():
     cipher = encrypt_message("I_Sondermaschine", plaintext, rotors, reflector)
     decrypted = encrypt_message("I_Sondermaschine", cipher, rotors, reflector)
     assert decrypted == plaintext
+
+def test_input_sanitization_variants():
+    """
+    Verifies that the server gracefully handles LLM formatting hallucinations 
+    for machine models, rotors, and reflectors (casing, hyphens, spaces, prefixes).
+    """
+    plaintext = "testmessage"
+    
+    # Test Enigma I with wacky formatting
+    rotors = [
+        RotorConfig(rotor_type="Rotor-I"), 
+        RotorConfig(rotor_type="ROTOR II"), 
+        RotorConfig(rotor_type="iii")
+    ]
+    reflector = ReflectorConfig(reflector_type="UKW A")
+    
+    # "i" should map to "I"
+    cipher1 = encrypt_message("i", plaintext, rotors, reflector)
+    
+    # Let's test the inverse with different wacky formatting
+    rotors_inverse = [
+        RotorConfig(rotor_type="i"), 
+        RotorConfig(rotor_type="Rotor_II"), 
+        RotorConfig(rotor_type="III")
+    ]
+    reflector_inverse = ReflectorConfig(reflector_type="UKW-A")
+    decrypted = encrypt_message("i", cipher1, rotors_inverse, reflector_inverse)
+    
+    assert decrypted == plaintext
+    
+    # Test M4 with Beta and UKWBThin variations
+    rotors_m4 = [
+        RotorConfig(rotor_type="I"), 
+        RotorConfig(rotor_type="II"), 
+        RotorConfig(rotor_type="III"),
+        RotorConfig(rotor_type="beta") # lowercase beta
+    ]
+    ref_m4 = ReflectorConfig(reflector_type="UKW-B Thin") # spaces and hyphens
+    cipher_m4 = encrypt_message("m4", plaintext, rotors_m4, ref_m4)
+    
+    rotors_m4_inv = [
+        RotorConfig(rotor_type="I"), 
+        RotorConfig(rotor_type="II"), 
+        RotorConfig(rotor_type="III"),
+        RotorConfig(rotor_type="BETA") # UPPERCASE BETA
+    ]
+    ref_m4_inv = ReflectorConfig(reflector_type="UKWBTHIN") 
+    decrypted_m4 = encrypt_message("M4", cipher_m4, rotors_m4_inv, ref_m4_inv)
+    
+    assert decrypted_m4 == plaintext

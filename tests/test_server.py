@@ -151,52 +151,65 @@ def test_enigma_i_sondermaschine_reversibility():
     decrypted = encrypt_message("I_Sondermaschine", cipher, rotors, reflector)
     assert decrypted == plaintext
 
-def test_input_sanitization_variants():
+def test_exhaustive_sanitization_variants():
     """
-    Verifies that the server gracefully handles LLM formatting hallucinations 
-    for machine models, rotors, and reflectors (casing, hyphens, spaces, prefixes).
+    Verifies that the server gracefully handles an extensive array of LLM formatting hallucinations 
+    for machine models, rotors, and reflectors (casing, hyphens, spaces, prefixes, and word noise).
     """
     plaintext = "testmessage"
     
-    # Test Enigma I with wacky formatting
-    rotors = [
-        RotorConfig(rotor_type="Rotor-I"), 
-        RotorConfig(rotor_type="ROTOR II"), 
-        RotorConfig(rotor_type="iii")
+    # 1. Enigma M3 with messy rotor names
+    rotors_m3 = [
+        RotorConfig(rotor_type="Rotor III"), 
+        RotorConfig(rotor_type="rotor-II"), 
+        RotorConfig(rotor_type="I")
     ]
-    reflector = ReflectorConfig(reflector_type="UKW A")
+    ref_m3 = ReflectorConfig(reflector_type="UKW-B")
+    assert encrypt_message("Enigma M3", plaintext, rotors_m3, ref_m3) == encrypt_message("M3", plaintext, rotors_m3, ref_m3)
     
-    # "i" should map to "I"
-    cipher1 = encrypt_message("i", plaintext, rotors, reflector)
-    
-    # Let's test the inverse with different wacky formatting
-    rotors_inverse = [
-        RotorConfig(rotor_type="i"), 
-        RotorConfig(rotor_type="Rotor_II"), 
+    # 2. Enigma I_Norway
+    rotors_norway = [
+        RotorConfig(rotor_type="I"), 
+        RotorConfig(rotor_type="II"), 
         RotorConfig(rotor_type="III")
     ]
-    reflector_inverse = ReflectorConfig(reflector_type="UKW-A")
-    decrypted = encrypt_message("i", cipher1, rotors_inverse, reflector_inverse)
+    ref_norway = ReflectorConfig(reflector_type="UKW Enigma I Norway")
     
-    assert decrypted == plaintext
+    # "Enigma I-Norway", "enigma_i_norway", "i norway" should all work and map to I_Norway
+    cipher_a = encrypt_message("Enigma I-Norway", plaintext, rotors_norway, ref_norway)
+    cipher_b = encrypt_message("enigma_i_norway", plaintext, rotors_norway, ref_norway)
+    cipher_c = encrypt_message("i norway", plaintext, rotors_norway, ref_norway)
+    assert cipher_a == cipher_b == cipher_c
     
-    # Test M4 with Beta and UKWBThin variations
+    # 3. K_Swiss and D
+    rotors_k = [RotorConfig(rotor_type="i"), RotorConfig(rotor_type="ii"), RotorConfig(rotor_type="iii")]
+    ref_k = ReflectorConfig(reflector_type="UKW_EnigmaCommercial")
+    
+    cipher_d = encrypt_message("Enigma D", plaintext, rotors_k, ref_k)
+    assert cipher_d == encrypt_message("d", plaintext, rotors_k, ref_k)
+    
+    cipher_kswiss = encrypt_message("K Swiss", plaintext, rotors_k, ref_k)
+    assert cipher_kswiss == encrypt_message("k-swiss", plaintext, rotors_k, ref_k)
+    
+    # 4. M4 with thin reflectors and greek rotors
     rotors_m4 = [
-        RotorConfig(rotor_type="I"), 
-        RotorConfig(rotor_type="II"), 
+        RotorConfig(rotor_type="ROTOR I"), 
+        RotorConfig(rotor_type="rotor ii"), 
         RotorConfig(rotor_type="III"),
-        RotorConfig(rotor_type="beta") # lowercase beta
+        RotorConfig(rotor_type="Beta")
     ]
-    ref_m4 = ReflectorConfig(reflector_type="UKW-B Thin") # spaces and hyphens
-    cipher_m4 = encrypt_message("m4", plaintext, rotors_m4, ref_m4)
+    ref_m4_a = ReflectorConfig(reflector_type="UKW-B-Thin")
+    ref_m4_b = ReflectorConfig(reflector_type="ukw b thin")
+    ref_m4_c = ReflectorConfig(reflector_type="UKWBTHIN")
     
-    rotors_m4_inv = [
-        RotorConfig(rotor_type="I"), 
-        RotorConfig(rotor_type="II"), 
-        RotorConfig(rotor_type="III"),
-        RotorConfig(rotor_type="BETA") # UPPERCASE BETA
-    ]
-    ref_m4_inv = ReflectorConfig(reflector_type="UKWBTHIN") 
-    decrypted_m4 = encrypt_message("M4", cipher_m4, rotors_m4_inv, ref_m4_inv)
+    cipher_m4_a = encrypt_message("m-4", plaintext, rotors_m4, ref_m4_a)
+    cipher_m4_b = encrypt_message("enigma m4", plaintext, rotors_m4, ref_m4_b)
+    cipher_m4_c = encrypt_message("M4", plaintext, rotors_m4, ref_m4_c)
+    assert cipher_m4_a == cipher_m4_b == cipher_m4_c
     
-    assert decrypted_m4 == plaintext
+    # 5. B_A133
+    rotors_b = [RotorConfig(rotor_type="I"), RotorConfig(rotor_type="II"), RotorConfig(rotor_type="III")]
+    ref_b = ReflectorConfig(reflector_type="UKW Enigma B A133")
+    cipher_b1 = encrypt_message("b a133", plaintext, rotors_b, ref_b)
+    cipher_b2 = encrypt_message("enigma b-a133", plaintext, rotors_b, ref_b)
+    assert cipher_b1 == cipher_b2

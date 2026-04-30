@@ -116,9 +116,9 @@ def encrypt_message(
         reflector: The ReflectorConfig object.
         plugboard_pairs: Optional dict for plugboard connections (e.g. {"A": "B", "C": "D"}). Ignored if the machine has no plugboard.
     """
-    # Map user input flexibly to known models (e.g. "i-norway" -> "I_Norway")
+    # Map user input flexibly to known models (e.g. "Enigma I-Norway" -> "I_Norway")
     model_key_map = {k.lower().replace("_", "").replace("-", "").replace(" ", ""): k for k in MODELS_CONFIG.keys()}
-    mod_clean = machine_model.lower().replace("_", "").replace("-", "").replace(" ", "")
+    mod_clean = machine_model.lower().replace("enigma", "").replace("_", "").replace("-", "").replace(" ", "")
     
     if mod_clean not in model_key_map:
         raise ValueError(f"Unsupported machine model: {machine_model}")
@@ -137,13 +137,17 @@ def encrypt_message(
     ref_clean = ref_raw.upper().replace("-", "").replace(" ", "").replace("_", "")
     
     # Map cleaned variations to actual class names
-    if ref_clean == "UKWA": ref_type = "UKWA"
-    elif ref_clean == "UKWB": ref_type = "UKWB"
-    elif ref_clean == "UKWC": ref_type = "UKWC"
-    elif ref_clean == "UKWBTHIN": ref_type = "UKWBThin"
-    elif ref_clean == "UKWCTHIN": ref_type = "UKWCThin"
-    else: ref_type = ref_raw # Fallback to exactly what the user passed
+    KNOWN_REFLECTORS = [
+        "UKWA", "UKWB", "UKWC", "UKWBThin", "UKWCThin",
+        "UKW_EnigmaCommercial", "UKW_EnigmaINorway", "UKW_EnigmaISonder", "UKW_EnigmaB_A133"
+    ]
+    ref_key_map = {k.upper().replace("_", "").replace("-", "").replace(" ", ""): k for k in KNOWN_REFLECTORS}
     
+    if ref_clean in ref_key_map:
+        ref_type = ref_key_map[ref_clean]
+    else: 
+        ref_type = ref_raw # Fallback to exactly what the user passed
+        
     reflector_cls_name = f"Reflector{ref_type}"
     try:
         reflector_cls = get_class(reflector_cls_name)

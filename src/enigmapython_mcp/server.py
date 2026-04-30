@@ -4,7 +4,7 @@ from mcp.server.fastmcp import FastMCP
 
 #
 #
-# If we ever add a new historical machine model (like the Enigma T "Tirpitz" or the Enigma G) to the core enigmapython library, we must remember to update three specific places in this MCP server:
+# If we ever add a new historical machine model to the core enigmapython library, we must remember to update three specific places in this MCP server:
 # 
 # MODELS_CONFIG Dictionary: Add the new model class and default ETW.
 # Sanitization Maps: Ensure the new reflector types are added to KNOWN_REFLECTORS.

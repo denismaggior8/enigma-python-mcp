@@ -2,7 +2,7 @@
 
 An MCP (Model Context Protocol) server that brings the capabilities of the [enigmapython](https://github.com/denismaggior8/enigma-python) library to LLMs, allowing them to encrypt and decrypt messages using historically accurate Enigma machine emulators.
 
-![Claude Desktop Integration](img/claude.png)
+![Claude Desktop Integration](https://github.com/denismaggior8/enigma-python-mcp/blob/main/img/claude.png?raw=true)
 
 [![PyPI version](https://badge.fury.io/py/enigmapython-mcp.svg)](https://pypi.org/project/enigmapython-mcp/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/enigmapython-mcp.svg)](https://pypi.org/project/enigmapython-mcp/)

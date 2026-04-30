@@ -132,16 +132,16 @@ def encrypt_message(
     etw = etw_cls()
     
     # 2. Initialize Reflector
-    # Sanitize common LLM formatting mistakes (e.g. "UKW-A" -> "UKWA")
+    # Sanitize common LLM formatting mistakes (e.g. "B-Thin Reflector" -> "BTHIN")
     ref_raw = reflector.reflector_type
-    ref_clean = ref_raw.upper().replace("-", "").replace(" ", "").replace("_", "")
+    ref_clean = ref_raw.upper().replace("REFLECTOR", "").replace("UKW", "").replace("-", "").replace(" ", "").replace("_", "")
     
     # Map cleaned variations to actual class names
     KNOWN_REFLECTORS = [
         "UKWA", "UKWB", "UKWC", "UKWBThin", "UKWCThin",
         "UKW_EnigmaCommercial", "UKW_EnigmaINorway", "UKW_EnigmaISonder", "UKW_EnigmaB_A133"
     ]
-    ref_key_map = {k.upper().replace("_", "").replace("-", "").replace(" ", ""): k for k in KNOWN_REFLECTORS}
+    ref_key_map = {k.upper().replace("UKW", "").replace("_", "").replace("-", "").replace(" ", ""): k for k in KNOWN_REFLECTORS}
     
     if ref_clean in ref_key_map:
         ref_type = ref_key_map[ref_clean]

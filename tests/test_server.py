@@ -201,11 +201,13 @@ def test_exhaustive_sanitization_variants():
     ref_m4_a = ReflectorConfig(reflector_type="UKW-B-Thin")
     ref_m4_b = ReflectorConfig(reflector_type="ukw b thin")
     ref_m4_c = ReflectorConfig(reflector_type="UKWBTHIN")
+    ref_m4_d = ReflectorConfig(reflector_type="B-Thin Reflector")
     
     cipher_m4_a = encrypt_message("m-4", plaintext, rotors_m4, ref_m4_a)
     cipher_m4_b = encrypt_message("enigma m4", plaintext, rotors_m4, ref_m4_b)
     cipher_m4_c = encrypt_message("M4", plaintext, rotors_m4, ref_m4_c)
-    assert cipher_m4_a == cipher_m4_b == cipher_m4_c
+    cipher_m4_d = encrypt_message("M4", plaintext, rotors_m4, ref_m4_d)
+    assert cipher_m4_a == cipher_m4_b == cipher_m4_c == cipher_m4_d
     
     # 5. B_A133
     rotors_b = [RotorConfig(rotor_type="I"), RotorConfig(rotor_type="II"), RotorConfig(rotor_type="III")]
@@ -213,3 +215,9 @@ def test_exhaustive_sanitization_variants():
     cipher_b1 = encrypt_message("b a133", plaintext, rotors_b, ref_b)
     cipher_b2 = encrypt_message("enigma b-a133", plaintext, rotors_b, ref_b)
     assert cipher_b1 == cipher_b2
+    
+    # 6. Basic Reflector test
+    rotors_basic = [RotorConfig(rotor_type="I"), RotorConfig(rotor_type="II"), RotorConfig(rotor_type="III")]
+    ref_basic_1 = ReflectorConfig(reflector_type="A Reflector")
+    ref_basic_2 = ReflectorConfig(reflector_type="ukw a")
+    assert encrypt_message("I", plaintext, rotors_basic, ref_basic_1) == encrypt_message("I", plaintext, rotors_basic, ref_basic_2)

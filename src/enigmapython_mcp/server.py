@@ -79,12 +79,12 @@ from pydantic import BaseModel, Field
 from typing import List, Dict, Union
 
 class RotorConfig(BaseModel):
-    rotor_type: str = Field(description="Rotor identifier (e.g., 'I', 'II', 'Beta').")
+    rotor_type: str = Field(description="Exact Rotor identifier. Valid options: 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'Beta', 'Gamma'.")
     ring_setting: int = Field(default=0, description="Ring setting (0-25).")
     initial_position: Union[int, str] = Field(default=0, description="Initial position (0-25 or A-Z).")
 
 class ReflectorConfig(BaseModel):
-    reflector_type: str = Field(description="Reflector identifier (e.g., 'UKWA', 'UKWB', 'UKW_EnigmaCommercial').")
+    reflector_type: str = Field(description="Exact Reflector identifier. Valid options: 'UKWA', 'UKWB', 'UKWC', 'UKWBThin', 'UKWCThin', 'UKW_EnigmaCommercial', 'UKW_EnigmaINorway', 'UKW_EnigmaISonder', 'UKW_EnigmaB_A133'.")
     ring_setting: int = Field(default=0, description="Ring setting (0-25). Only applicable for settable/rotating reflectors.")
     initial_position: Union[int, str] = Field(default=0, description="Initial position (0-25 or A-Z). Only applicable for rotating reflectors.")
 
@@ -97,20 +97,10 @@ def encrypt_message(
     plugboard_pairs: Dict[str, str] = None
 ) -> str:
     """
-    Encrypt or decrypt a message using an Enigma machine.
+    Encrypt or decrypt a message using a specified Enigma machine configuration.
     
     Args:
-        machine_model: Model name. Supported models and their valid rotors/reflectors:
-            - 'M3': Rotors I-VIII. Reflectors: UKWB, UKWC
-            - 'M4': Rotors Beta, Gamma, I-VIII. Reflectors: UKWBThin, UKWCThin
-            - 'I': Rotors I-V. Reflectors: UKWA, UKWB, UKWC
-            - 'I_Norway': Rotors I-V. Reflectors: UKW_EnigmaINorway
-            - 'I_Sondermaschine': Rotors I-III. Reflectors: UKW_EnigmaISonder
-            - 'K': Rotors I-III. Reflectors: UKW_EnigmaCommercial
-            - 'K_Swiss': Rotors I-III. Reflectors: UKW_EnigmaCommercial
-            - 'D': Rotors I-III. Reflectors: UKW_EnigmaCommercial
-            - 'Z': Rotors I-III. Reflectors: UKW_EnigmaZ
-            - 'B_A133': Rotors I-III. Reflectors: UKW_EnigmaB_A133
+        machine_model: Exact machine model name. MUST be one of: 'M3', 'M4', 'I', 'I_Norway', 'I_Sondermaschine', 'K', 'K_Swiss', 'D', 'Z', 'B_A133'. Do not add 'Enigma' prefix.
         message: The plaintext or ciphertext to process.
         rotors: List of RotorConfig objects. MUST be ordered exactly as: [Fastest/Rightmost, Middle, Slowest/Leftmost, Greek (if M4)].
         reflector: The ReflectorConfig object.

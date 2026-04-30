@@ -4,9 +4,9 @@ An MCP (Model Context Protocol) server that brings the capabilities of the [enig
 
 ![Claude Desktop Integration](img/claude.png)
 
-[![PyPI version](https://img.shields.io/pypi/v/enigmapython-mcp.svg?color=blue)](https://pypi.org/project/enigmapython-mcp/)
-[![Python Versions](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
-[![Downloads](https://img.shields.io/pypi/dm/enigmapython-mcp.svg?color=blue)](https://pypi.org/project/enigmapython-mcp/)
+[![PyPI version](https://badge.fury.io/py/enigmapython-mcp.svg)](https://pypi.org/project/enigmapython-mcp/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/enigmapython-mcp.svg)](https://pypi.org/project/enigmapython-mcp/)
+[![Downloads](https://static.pepy.tech/badge/enigmapython-mcp)](https://pepy.tech/project/enigmapython-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Publish Status](https://github.com/denismaggior8/enigma-python-mcp/actions/workflows/publish.yml/badge.svg)](https://github.com/denismaggior8/enigma-python-mcp/actions/workflows/publish.yml)
 

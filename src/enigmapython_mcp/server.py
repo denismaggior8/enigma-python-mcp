@@ -120,7 +120,11 @@ def encrypt_message(
             - 'K', 'K_Swiss', 'D': UKW_EnigmaCommercial
             - 'Z': UKW_EnigmaZ
             - 'B_A133': UKW_EnigmaB_A133
-        message: The plaintext or ciphertext to process. Can be string or int.
+        message: The plaintext or ciphertext to process.
+            - For Enigma Z: MUST contain ONLY digits (1234567890).
+            - For Enigma B_A133: MUST contain ONLY Swedish letters (abcdefghijklmnopqrstuvxyzåäö). Note: 'w' is strictly forbidden.
+            - For all other machines: MUST contain ONLY standard letters (A-Z).
+            - Spaces, punctuation, and special characters are strictly forbidden in all machines.
         rotors: List of RotorConfig objects. MUST be ordered exactly as: [Fastest/Rightmost, Middle, Slowest/Leftmost, Greek (if M4)].
         reflector: The ReflectorConfig object.
         plugboard_pairs: Optional dict for plugboard connections (e.g. {"A": "B", "C": "D"}). Ignored if the machine has no plugboard.

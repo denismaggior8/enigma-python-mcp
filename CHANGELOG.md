@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - **Integer Type Coercion**: Fixed an issue where numeric string messages (e.g., `1234567890`) passed to numerical Enigma machines (like the Enigma Z) would fail Pydantic validation because they were interpreted as raw integers in JSON. The `message` parameter now natively accepts both `str` and `int`.
 - **Character Validation Feedback**: Fixed an issue where an LLM passing literal quotes (e.g., `"1234567890"`) or spaces would cause a cryptic `ValueError: '"' is not in list`. The server now intercepts these character errors and returns a highly actionable error message explicitly telling the LLM to strip spaces, punctuation, and literal quotes before resubmitting.
+- **Enigma Z Electrical Short Circuit**: Fixed a catastrophic crash where the LLM could hallucinate an alphabetic A-Z reflector (like `UKWB`) for the purely numeric `Enigma Z` model. The incompatible wiring would cause `enigmapython` to crash deep in the simulation with `ValueError: 'y' is not in list`. The MCP server now actively validates the reflector type during instantiation and immediately raises a helpful error if it detects an alphabetic reflector being wired into a numeric machine.
 
 
 ## [0.1.1] - 2026-04-30

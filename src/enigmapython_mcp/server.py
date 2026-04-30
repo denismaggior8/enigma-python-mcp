@@ -112,6 +112,14 @@ def encrypt_message(
     
     Args:
         machine_model: Exact machine model name. MUST be one of: 'M3', 'M4', 'I', 'I_Norway', 'I_Sondermaschine', 'K', 'K_Swiss', 'D', 'Z', 'B_A133'. Do not add 'Enigma' prefix.
+            Supported models and their explicitly required reflectors:
+            - 'M3', 'I': UKWA, UKWB, UKWC
+            - 'M4': UKWBThin, UKWCThin
+            - 'I_Norway': UKW_EnigmaINorway
+            - 'I_Sondermaschine': UKW_EnigmaISonder
+            - 'K', 'K_Swiss', 'D': UKW_EnigmaCommercial
+            - 'Z': UKW_EnigmaZ
+            - 'B_A133': UKW_EnigmaB_A133
         message: The plaintext or ciphertext to process. Can be string or int.
         rotors: List of RotorConfig objects. MUST be ordered exactly as: [Fastest/Rightmost, Middle, Slowest/Leftmost, Greek (if M4)].
         reflector: The ReflectorConfig object.
@@ -158,6 +166,13 @@ def encrypt_message(
             reflector_cls = get_class(reflector.reflector_type)
         except ModuleNotFoundError:
             raise ValueError(f"Reflector class not found: {reflector_cls_name} or {reflector.reflector_type}")
+            
+    # CRITICAL VALIDATION: Enigma Z is the only numeric machine. It will crash if given an A-Z reflector.
+    if actual_model == "Z" and reflector_cls.__name__ != "ReflectorUKW_EnigmaZ":
+        raise ValueError(
+            "Enigma Z is a purely numeric machine (1-0). It will crash if connected to an alphabetic (A-Z) reflector. "
+            "You MUST use reflector_type='UKW_EnigmaZ' when using the Enigma Z model."
+        )
             
     import inspect
     sig = inspect.signature(reflector_cls.__init__)

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.3] - 2026-05-05
+
+### Fixed
+- **SSE Transport Compatibility**: Fixed a `TypeError` when starting the server in `--transport sse` mode caused by a breaking change in the underlying `FastMCP.run()` API, which no longer accepts `host` and `port` keyword arguments. The configuration is now correctly assigned via `mcp.settings`.
+
 ## [0.1.2] - 2026-04-30
 
 ### Fixed

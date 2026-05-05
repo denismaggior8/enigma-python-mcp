@@ -164,3 +164,22 @@ source .venv/bin/activate
 pip install pytest
 export PYTHONPATH=$PYTHONPATH:$(pwd)/src/enigmapython_mcp && pytest tests/* 
 ```
+
+### Testing the SSE Server interactively
+
+Because the Model Context Protocol requires a stateful initialization handshake before any tools can be called, manually testing the SSE endpoint with `curl` is quite complex. 
+
+The easiest and officially recommended way to test the server is using the **MCP Inspector**:
+
+1. Ensure your server is running in SSE mode:
+   ```bash
+   uv run enigmapython-mcp --transport sse --host 0.0.0.0 --port 8000
+   ```
+2. In a second terminal, launch the Inspector:
+   ```bash
+   npx @modelcontextprotocol/inspector
+   ```
+3. A web interface will open in your browser (usually at `http://localhost:5173`).
+4. Change the **Transport Type** to **SSE**.
+5. Enter `http://localhost:8000/sse` as the URL and click **Connect**.
+6. You can now visually configure and execute the `encrypt_message` tool!

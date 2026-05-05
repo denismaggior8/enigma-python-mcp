@@ -1,0 +1,35 @@
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "encrypt_message",
+    "arguments": {
+      "machine_model": "M3",
+      "message": "HELLOWORLD",
+      "rotors": [
+        {
+          "rotor_type": "III",
+          "ring_setting": 0,
+          "initial_position": 0
+        },
+        {
+          "rotor_type": "II",
+          "ring_setting": 0,
+          "initial_position": 0
+        },
+        {
+          "rotor_type": "I",
+          "ring_setting": 0,
+          "initial_position": 0
+        }
+      ],
+      "reflector": {
+        "reflector_type": "UKWB"
+      },
+      "plugboard_pairs": {
+        "A": "M"
+      }
+    }
+  }
+}

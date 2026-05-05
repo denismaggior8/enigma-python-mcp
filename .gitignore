@@ -3,3 +3,4 @@
 *.mcpb
 .pytest_cache
 **/.DS_Store
+**/*.lock

@@ -288,9 +288,7 @@ def main():
     args = parser.parse_args()
     
     if args.transport == "sse":
-        mcp.settings.host = args.host
-        mcp.settings.port = args.port
-        mcp.run(transport="sse")
+        mcp.run(transport="sse", host=args.host, port=args.port)
     else:
         mcp.run()
 

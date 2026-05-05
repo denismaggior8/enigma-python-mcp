@@ -10,6 +10,10 @@ An MCP (Model Context Protocol) server that brings the capabilities of the [enig
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Publish Status](https://github.com/denismaggior8/enigma-python-mcp/actions/workflows/publish.yml/badge.svg)](https://github.com/denismaggior8/enigma-python-mcp/actions/workflows/publish.yml)
 
+This MCP Server is listed on [Glama.ai](https://glama.ai) with this score
+
+[![enigma-python-mcp MCP server](https://glama.ai/mcp/servers/denismaggior8/enigma-python-mcp/badges/card.svg)](https://glama.ai/mcp/servers/denismaggior8/enigma-python-mcp)
+
 ## Features
 - **Exposes all known Enigma machine models**: Enigma M3, Enigma M4, Enigma I, Enigma K, Enigma Z, Enigma D, and more.
 - **Dynamic Configuration**: LLMs can specify rotors, initial positions, ring settings, reflectors, and plugboard pairs for the encryption.
